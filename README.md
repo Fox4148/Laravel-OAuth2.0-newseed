@@ -12,6 +12,10 @@
  - Import the database script in your mysql engine
  - Run `php artisan serve`
 
+
+## License
+
+The new seed used the  [GNU3.0 license](https://www.gnu.org/licenses/gpl-3.0.html).
  
 ## About Laravel
 
