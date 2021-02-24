@@ -10,6 +10,7 @@
   - After composer is installed install the passport package from the app folder:
     - `composer require laravel/passport`
  - Import the database script in your mysql engine
+ - Run `php artisan passport:install`
  - Run `php artisan serve`
 
 
