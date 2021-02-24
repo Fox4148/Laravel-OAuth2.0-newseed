@@ -11,7 +11,8 @@
     - `composer require laravel/passport`
  - Import the database script in your mysql engine
  - Run `php artisan passport:install`
- - Run `php artisan serve`
+ - `php artisan key:generate
+ - `php artisan serve`
 
 
 ## License
