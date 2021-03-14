@@ -31,11 +31,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::cookie(config('app.name'));
         Passport::routes();
         Passport::tokensCan([
-            'user' => 'User Type',
+            'user' => 'User Type', //Don't register this scope in the database, it is intentionally hardcoded only for security purpose (authentication)
             'User_Create' => 'Create User',
             'User_Read' => 'Read User',
             'User_Update' => 'Update User',
-            'User_Delete' => 'Delete User',
+            'User_Delete' => 'Delete User'
         ]);
 
         //

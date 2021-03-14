@@ -21,30 +21,13 @@ use Auth;
 class LoginController extends Controller
 
 {
-
-    public function userDashboard()
-    {
-
-        $users = User::all();
-
-        $success =  $users;
-
-
-        return response()->json($success, 200);
-    }
-
-    public function customerDashboard()
-    {
-        $users = Customer::all();
-        $success =  $users;
-        return response()->json($success, 200);
-    }
-
+    use \App\Models\Traits\HasPassportScopes;
+    //
     public function userLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required'
         ]);
 
         if($validator->fails()){
@@ -55,12 +38,14 @@ class LoginController extends Controller
             config(['auth.guards.api.provider' => 'user']);
 
             $user = User::select('users.*')->find(auth()->guard('user')->user()->id);
+            $tokenScopes = $this->GetUserScopes($user->id,$user->name);
+            $token =  $user->createToken($user->name,$tokenScopes)->accessToken; 
 
-            $success =  $user;
-            $tokenScopes = $this->GetUserScopes($user->id);
-            $success['token'] =  $user->createToken($user->name.' token',$tokenScopes)->accessToken; 
-
-            return response()->json($success, 200);
+            $user->userInfo->increment('logon_count');
+            return response()->json([
+                'user'=>$user,
+                'token'=>$token,
+                'csrf'=>$request->session()->token()], 200);
 
         }else{ 
             return response()->json(['error' => ['Email and Password are Wrong.']], 200);
@@ -68,44 +53,12 @@ class LoginController extends Controller
 
     }
 
-
-    public function customerLogin(Request $request)
+    public function userSignup(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if($validator->fails()){
-            return response()->json(['error' => $validator->errors()->all()]);
-        }
-
-        if(auth()->guard('customer')->attempt(['email' => request('email'), 'password' => request('password')])){
-            config(['auth.guards.api.provider' => 'customer']);
-  
-            $customer = Customer::select('customers.*')->find(auth()->guard('customer')->user()->id);
-            $success =  $customer;
-            $success['token'] =  $customer->createToken('MyApp',['customer'])->accessToken; 
-
-            return response()->json($success, 200);
-        }else{ 
-            return response()->json(['error' => ['Email and Password are Wrong.']], 200);
-        }
-    }    
-
-    private function GetUserScopes($userId)
-    {
-        $dbScopes=DB::Select('call GetScopesFromUser('.$userId.')');
-        $toReturn=[];
-        foreach ($dbScopes as $key => $scope) 
-            array_push($toReturn, $scope->name);
-        array_push($toReturn,"user");
-        return $toReturn;
-    }
-
-    private function GetCustomerScopes($customerId)
-    {
-
+        
     }
 
 }
+
+/*SELECT id FROM `oauth_access_tokens` WHERE (Select SUBSTRING_INDEX(name,';',1) from `oauth_access_tokens`
+ Where user_id=19) ='1First.1Last@example.com'*/

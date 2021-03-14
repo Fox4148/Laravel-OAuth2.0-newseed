@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'created_at',
+        'updated_at',
+        'email_verified_at'
     ];
 
     /**
@@ -29,6 +32,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
+        'created_at',
+        'updated_at',
         'password',
         'remember_token',
     ];
@@ -41,4 +46,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function userInfo()
+    {
+        return $this->hasOne('App\Models\UserInfo','users_id');
+    }
+
+    public function userScope()
+    { 
+        return $this->belongsToMany('App\Models\Scope', 'users_scopes', 'users_id', 'scopes_id');
+    }
 }
