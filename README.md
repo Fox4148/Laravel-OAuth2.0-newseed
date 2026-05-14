@@ -1,6 +1,6 @@
 <p align="center">
 
-## About The new seed
+## (DEPRECATED) About The new seed
 
  This application is a basic OAuth2.0 ressource control API using laravel and passport.
  
