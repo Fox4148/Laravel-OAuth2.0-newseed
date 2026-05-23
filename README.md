@@ -9,7 +9,7 @@
   - Composer is required to run laravel. You must install composer : https://getcomposer.org/download/
   - After composer is installed install the passport package from the app folder:
     - `composer require laravel/passport`
- - Import the database script in your mysql engine
+ - Migrate to your db engine
  - Run;
    - `php artisan passport:install`
    - `php artisan key:generate`
